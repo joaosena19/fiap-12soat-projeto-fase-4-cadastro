@@ -2029,7 +2029,23 @@
           "build/net6.0/xunit.runner.visualstudio.props": {}
         }
       },
-      "API/1.0.0": {
+      "Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "Domain": "1.0.0",
+          "Microsoft.Extensions.Configuration.Abstractions": "9.0.7",
+          "Shared": "1.0.0",
+          "System.IdentityModel.Tokens.Jwt": "7.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Application.dll": {}
+        }
+      },
+      "CadastroService.API/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
@@ -2050,30 +2066,14 @@
           "Swashbuckle.AspNetCore": "9.0.3"
         },
         "compile": {
-          "bin/placeholder/API.dll": {}
+          "bin/placeholder/CadastroService.API.dll": {}
         },
         "runtime": {
-          "bin/placeholder/API.dll": {}
+          "bin/placeholder/CadastroService.API.dll": {}
         },
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
         ]
-      },
-      "Application/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v9.0",
-        "dependencies": {
-          "Domain": "1.0.0",
-          "Microsoft.Extensions.Configuration.Abstractions": "9.0.7",
-          "Shared": "1.0.0",
-          "System.IdentityModel.Tokens.Jwt": "7.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Application.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Application.dll": {}
-        }
       },
       "Domain/1.0.0": {
         "type": "project",
@@ -5103,15 +5103,15 @@
         "xunit.runner.visualstudio.nuspec"
       ]
     },
-    "API/1.0.0": {
-      "type": "project",
-      "path": "../OficinaMecanica/API.csproj",
-      "msbuildProject": "../OficinaMecanica/API.csproj"
-    },
     "Application/1.0.0": {
       "type": "project",
       "path": "../Application/Application.csproj",
       "msbuildProject": "../Application/Application.csproj"
+    },
+    "CadastroService.API/1.0.0": {
+      "type": "project",
+      "path": "../OficinaMecanica/API.csproj",
+      "msbuildProject": "../OficinaMecanica/API.csproj"
     },
     "Domain/1.0.0": {
       "type": "project",
@@ -5131,9 +5131,9 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "API >= 1.0.0",
       "Application >= 1.0.0",
       "Bogus >= 35.6.1",
+      "CadastroService.API >= 1.0.0",
       "Domain >= 1.0.0",
       "FluentAssertions >= 8.5.0",
       "Infrastructure >= 1.0.0",

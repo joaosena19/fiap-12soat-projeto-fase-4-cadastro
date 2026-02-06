@@ -1,6 +1,6 @@
 {
-  "API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Repositorios\\fiap-12soat-projeto-fase-4-cadastro\\src\\OficinaMecanica",
   "Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Repositorios\\fiap-12soat-projeto-fase-4-cadastro\\src\\Application",
+  "CadastroService.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Repositorios\\fiap-12soat-projeto-fase-4-cadastro\\src\\OficinaMecanica",
   "Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Repositorios\\fiap-12soat-projeto-fase-4-cadastro\\src\\Domain",
   "Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Repositorios\\fiap-12soat-projeto-fase-4-cadastro\\src\\Infrastructure",
   "Shared, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Repositorios\\fiap-12soat-projeto-fase-4-cadastro\\src\\Shared"
