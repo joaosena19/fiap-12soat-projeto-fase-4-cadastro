@@ -30,12 +30,14 @@ namespace Infrastructure.Database.Configurations
             // Seed data para as roles
             builder.HasData(
                 new { Id = RoleEnum.Administrador },
-                new { Id = RoleEnum.Cliente }
+                new { Id = RoleEnum.Cliente },
+                new { Id = RoleEnum.Sistema }
             );
             
             builder.OwnsOne(r => r.Nome).HasData(
                 new { RoleId = RoleEnum.Administrador, Valor = RoleEnum.Administrador.ToString() },
-                new { RoleId = RoleEnum.Cliente, Valor = RoleEnum.Cliente.ToString() }
+                new { RoleId = RoleEnum.Cliente, Valor = RoleEnum.Cliente.ToString() },
+                new { RoleId = RoleEnum.Sistema, Valor = RoleEnum.Sistema.ToString() }
             );
         }
     }

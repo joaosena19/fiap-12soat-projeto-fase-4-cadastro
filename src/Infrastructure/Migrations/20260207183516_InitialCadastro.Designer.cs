@@ -12,15 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250721003350_AddVeiculosTable")]
-    partial class AddVeiculosTable
+    [Migration("20260207183516_InitialCadastro")]
+    partial class InitialCadastro
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.7")
+                .HasAnnotation("ProductVersion", "9.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -56,27 +56,89 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<int>("TipoVeiculo")
-                        .HasColumnType("integer")
-                        .HasColumnName("tipo_veiculo");
+                    b.Property<Guid>("ClienteId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("cliente_id");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
 
                     b.ToTable("veiculos", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Identidade.Aggregates.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1
+                        },
+                        new
+                        {
+                            Id = 2
+                        },
+                        new
+                        {
+                            Id = 3
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Identidade.Aggregates.Usuario", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("usuarios", (string)null);
+                });
+
+            modelBuilder.Entity("usuarios_roles", b =>
+                {
+                    b.Property<Guid>("usuario_id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("usuario_id");
+
+                    b.Property<int>("role_id")
+                        .HasColumnType("integer")
+                        .HasColumnName("role_id");
+
+                    b.HasKey("usuario_id", "role_id");
+
+                    b.HasIndex("role_id");
+
+                    b.ToTable("usuarios_roles", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Cadastros.Aggregates.Cliente", b =>
                 {
-                    b.OwnsOne("Domain.Cadastros.ValueObjects.Cliente.Cpf", "Cpf", b1 =>
+                    b.OwnsOne("Domain.Cadastros.ValueObjects.Cliente.DocumentoIdentificador", "DocumentoIdentificador", b1 =>
                         {
                             b1.Property<Guid>("ClienteId")
                                 .HasColumnType("uuid");
 
+                            b1.Property<string>("TipoDocumento")
+                                .IsRequired()
+                                .HasMaxLength(4)
+                                .HasColumnType("character varying(4)")
+                                .HasColumnName("tipo_documento_identificador");
+
                             b1.Property<string>("Valor")
                                 .IsRequired()
-                                .HasMaxLength(11)
-                                .HasColumnType("character varying(11)")
-                                .HasColumnName("cpf");
+                                .HasMaxLength(14)
+                                .HasColumnType("character varying(14)")
+                                .HasColumnName("documento_identificador");
 
                             b1.HasKey("ClienteId");
 
@@ -105,7 +167,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("ClienteId");
                         });
 
-                    b.Navigation("Cpf")
+                    b.Navigation("DocumentoIdentificador")
                         .IsRequired();
 
                     b.Navigation("Nome")
@@ -159,6 +221,12 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Cadastros.Aggregates.Veiculo", b =>
                 {
+                    b.HasOne("Domain.Cadastros.Aggregates.Cliente", null)
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.OwnsOne("Domain.Cadastros.ValueObjects.Veiculo.Ano", "Ano", b1 =>
                         {
                             b1.Property<Guid>("VeiculoId")
@@ -252,6 +320,25 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("VeiculoId");
                         });
 
+                    b.OwnsOne("Domain.Cadastros.ValueObjects.Veiculo.TipoVeiculo", "TipoVeiculo", b1 =>
+                        {
+                            b1.Property<Guid>("VeiculoId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Valor")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("character varying(10)")
+                                .HasColumnName("tipo_veiculo");
+
+                            b1.HasKey("VeiculoId");
+
+                            b1.ToTable("veiculos");
+
+                            b1.WithOwner()
+                                .HasForeignKey("VeiculoId");
+                        });
+
                     b.Navigation("Ano")
                         .IsRequired();
 
@@ -265,6 +352,140 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Placa")
+                        .IsRequired();
+
+                    b.Navigation("TipoVeiculo")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Identidade.Aggregates.Role", b =>
+                {
+                    b.OwnsOne("Domain.Identidade.ValueObjects.NomeRole", "Nome", b1 =>
+                        {
+                            b1.Property<int>("RoleId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Valor")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("character varying(50)")
+                                .HasColumnName("nome");
+
+                            b1.HasKey("RoleId");
+
+                            b1.ToTable("roles");
+
+                            b1.WithOwner()
+                                .HasForeignKey("RoleId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    RoleId = 1,
+                                    Valor = "Administrador"
+                                },
+                                new
+                                {
+                                    RoleId = 2,
+                                    Valor = "Cliente"
+                                },
+                                new
+                                {
+                                    RoleId = 3,
+                                    Valor = "Sistema"
+                                });
+                        });
+
+                    b.Navigation("Nome")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Identidade.Aggregates.Usuario", b =>
+                {
+                    b.OwnsOne("Domain.Identidade.ValueObjects.DocumentoIdentificadorUsuario", "DocumentoIdentificadorUsuario", b1 =>
+                        {
+                            b1.Property<Guid>("UsuarioId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("TipoDocumento")
+                                .IsRequired()
+                                .HasMaxLength(4)
+                                .HasColumnType("character varying(4)")
+                                .HasColumnName("tipo_documento_identificador");
+
+                            b1.Property<string>("Valor")
+                                .IsRequired()
+                                .HasMaxLength(14)
+                                .HasColumnType("character varying(14)")
+                                .HasColumnName("documento_identificador");
+
+                            b1.HasKey("UsuarioId");
+
+                            b1.ToTable("usuarios");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UsuarioId");
+                        });
+
+                    b.OwnsOne("Domain.Identidade.ValueObjects.SenhaHash", "SenhaHash", b1 =>
+                        {
+                            b1.Property<Guid>("UsuarioId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Valor")
+                                .IsRequired()
+                                .HasMaxLength(500)
+                                .HasColumnType("character varying(500)")
+                                .HasColumnName("senha_hash");
+
+                            b1.HasKey("UsuarioId");
+
+                            b1.ToTable("usuarios");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UsuarioId");
+                        });
+
+                    b.OwnsOne("Domain.Identidade.ValueObjects.StatusUsuario", "Status", b1 =>
+                        {
+                            b1.Property<Guid>("UsuarioId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Valor")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("status");
+
+                            b1.HasKey("UsuarioId");
+
+                            b1.ToTable("usuarios");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UsuarioId");
+                        });
+
+                    b.Navigation("DocumentoIdentificadorUsuario")
+                        .IsRequired();
+
+                    b.Navigation("SenhaHash")
+                        .IsRequired();
+
+                    b.Navigation("Status")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("usuarios_roles", b =>
+                {
+                    b.HasOne("Domain.Identidade.Aggregates.Role", null)
+                        .WithMany()
+                        .HasForeignKey("role_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Identidade.Aggregates.Usuario", null)
+                        .WithMany()
+                        .HasForeignKey("usuario_id")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
