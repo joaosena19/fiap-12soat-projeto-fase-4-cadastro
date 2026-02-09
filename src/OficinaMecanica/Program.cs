@@ -43,6 +43,7 @@ builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
+app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseSwaggerDocumentation();
 app.UseHttpsRedirection();
