@@ -56,7 +56,7 @@ namespace Tests.Application.Identidade
             // Assert
             _fixture.CriarUsuarioPresenterMock.DeveTerApresentadoSucesso<ICriarUsuarioPresenter, UsuarioAggregate>(usuarioEsperado);
             _fixture.CriarUsuarioPresenterMock.NaoDeveTerApresentadoErro<ICriarUsuarioPresenter, UsuarioAggregate>();
-            _fixture.PasswordHasherMock.Verify(ph => ph.Hash(senhaNaoHasheada), Times.Once);
+            _fixture.PasswordHasherMock.DeveTerHasheadoSenha(senhaNaoHasheada);
         }
 
         [Fact(DisplayName = "Deve apresentar erro quando já existe usuário com documento")]
@@ -82,7 +82,7 @@ namespace Tests.Application.Identidade
             // Assert
             _fixture.CriarUsuarioPresenterMock.DeveTerApresentadoErro<ICriarUsuarioPresenter, UsuarioAggregate>("Já existe um usuário cadastrado com este documento.", ErrorType.Conflict);
             _fixture.CriarUsuarioPresenterMock.NaoDeveTerApresentadoSucesso<ICriarUsuarioPresenter, UsuarioAggregate>();
-            _fixture.PasswordHasherMock.Verify(ph => ph.Hash(It.IsAny<string>()), Times.Never);
+            _fixture.PasswordHasherMock.NaoDeveTerHasheadoNenhumaSenha();
         }
 
 
@@ -155,6 +155,36 @@ namespace Tests.Application.Identidade
             // Assert
             _fixture.CriarUsuarioPresenterMock.DeveTerApresentadoErro<ICriarUsuarioPresenter, UsuarioAggregate>("Acesso negado. Apenas administradores podem criar usuários.", ErrorType.NotAllowed);
             _fixture.CriarUsuarioPresenterMock.NaoDeveTerApresentadoSucesso<ICriarUsuarioPresenter, UsuarioAggregate>();
+        }
+
+        [Fact(DisplayName = "Deve apresentar erro quando uma ou mais roles informadas são inválidas")]
+        [Trait("UseCase", "CriarUsuario")]
+        public async Task ExecutarAsync_DeveApresentarErro_QuandoRolesInvalidas()
+        {
+            // Arrange
+            var ator = new AtorBuilder().ComoAdministrador().Build();
+            var documento = DocumentoHelper.GerarCpfValido();
+            var logger = MockLogger.CriarSimples();
+
+            var dto = new CriarUsuarioDtoBuilder()
+                .ComDocumento(documento)
+                .ComRoles("Cliente", "RoleInexistente")
+                .Build();
+
+            // Gateway retorna apenas 1 role, mas o DTO solicitou 2 (uma inválida)
+            var rolesRetornadas = new List<Role> { Role.Cliente() };
+
+            _fixture.UsuarioGatewayMock.AoObterPorDocumento(documento).NaoRetornaNada();
+            _fixture.UsuarioGatewayMock.AoObterRoles(dto.Roles).Retorna(rolesRetornadas);
+
+            // Act
+            await _fixture.CriarUsuarioUseCase.ExecutarAsync(ator, dto, _fixture.UsuarioGatewayMock.Object, _fixture.CriarUsuarioPresenterMock.Object, _fixture.PasswordHasherMock.Object, logger);
+
+            // Assert
+            _fixture.CriarUsuarioPresenterMock.DeveTerApresentadoErro<ICriarUsuarioPresenter, UsuarioAggregate>("Uma ou mais roles informadas são inválidas.", ErrorType.InvalidInput);
+            _fixture.CriarUsuarioPresenterMock.NaoDeveTerApresentadoSucesso<ICriarUsuarioPresenter, UsuarioAggregate>();
+            _fixture.UsuarioGatewayMock.NaoDeveTerSalvadoUsuario();
+            _fixture.PasswordHasherMock.Verify(ph => ph.Hash(It.IsAny<string>()), Times.Never);
         }
 
         [Fact(DisplayName = "Deve logar information ao ocorrer DomainException")]
