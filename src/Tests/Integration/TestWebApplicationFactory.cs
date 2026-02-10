@@ -55,9 +55,6 @@ namespace Tests.Integration
                     services.Remove(descriptor);
                 }
 
-                // Configura mock do IMetricsService para testes
-                services.AddSingleton<IMetricsService, MockMetricsService>();
-
                 // Cria conexão com banco de dados em memória
                 services.AddDbContext<AppDbContext>(options =>
                 {
