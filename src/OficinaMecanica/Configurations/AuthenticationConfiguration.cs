@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Infrastructure.Authentication;
 
 namespace API.Configurations
 {
@@ -44,9 +43,6 @@ namespace API.Configurations
                 });
 
             services.AddAuthorization();
-
-            // Registrar serviços de webhook
-            services.AddScoped<IHmacValidationService, HmacValidationService>();
 
             return services;
         }

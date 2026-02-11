@@ -29,12 +29,11 @@ namespace Tests.Integration
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            // Sobrescreve o appsettings para usar o HmacSecret de teste
+            // Sobrescreve o appsettings para usar as configurações JWT de teste
             builder.ConfigureAppConfiguration((context, config) =>
             {
                 var overrides = new Dictionary<string, string?>
                 {
-                    ["Webhook:HmacSecret"] = TestHmacUtils.TestHmacSecret,
                     ["Jwt:Key"] = JwtTestConstants.Key,
                     ["Jwt:Issuer"] = JwtTestConstants.Issuer,
                     ["Jwt:Audience"] = JwtTestConstants.Audience,
