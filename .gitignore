@@ -95,3 +95,6 @@ Thumbs.db
 **/Tests/Report/
 **/generate-test-reports.bat
 **/generate-test-reports.ps1
+
+# Atlas/Conductor agent plans
+plans/
