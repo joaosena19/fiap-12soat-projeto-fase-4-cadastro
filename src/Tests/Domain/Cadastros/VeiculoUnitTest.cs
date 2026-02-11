@@ -38,6 +38,35 @@ namespace Tests.Domain.Cadastros
             veiculo.TipoVeiculo.Valor.Should().Be(tipoVeiculo);
         }
 
+        [Fact(DisplayName = "Deve reidratar veículo com ID específico e dados válidos")]
+        [Trait("Dados Válidos", "Reidratar")]
+        public void Reidratar_DeveReidratarVeiculoComIdEspecificoEDadosValidos()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var clienteId = Guid.NewGuid();
+            var placa = "ABC1234";
+            var modelo = "Civic";
+            var marca = "Honda";
+            var cor = "Preto";
+            var ano = 2020;
+            var tipoVeiculo = TipoVeiculoEnum.Carro;
+
+            // Act
+            var veiculo = Veiculo.Reidratar(id, clienteId, placa, modelo, marca, cor, ano, tipoVeiculo);
+
+            // Assert
+            veiculo.Should().NotBeNull();
+            veiculo.Id.Should().Be(id);
+            veiculo.ClienteId.Should().Be(clienteId);
+            veiculo.Placa.Valor.Should().Be(placa);
+            veiculo.Modelo.Valor.Should().Be(modelo);
+            veiculo.Marca.Valor.Should().Be(marca);
+            veiculo.Cor.Valor.Should().Be(cor);
+            veiculo.Ano.Valor.Should().Be(ano);
+            veiculo.TipoVeiculo.Valor.Should().Be(tipoVeiculo);
+        }
+
         [Fact(DisplayName = "Deve atualizar veículo com dados válidos")]
         [Trait("Dados Válidos", "Atualizar")]
         public void Atualizar_DeveAtualizarVeiculoComDadosValidos()

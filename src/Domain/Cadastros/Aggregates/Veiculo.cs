@@ -17,7 +17,7 @@ namespace Domain.Cadastros.Aggregates
         public Ano Ano { get; private set; } = null!;
         public TipoVeiculo TipoVeiculo { get; private set; } = null!;
 
-        // Contrutor sem par‚metro para EF Core
+        // Construtor sem par√¢metro para EF Core
         private Veiculo() { }
 
         private Veiculo(Guid id, Guid clienteId, Placa placa, Modelo modelo, Marca marca, Cor cor, Ano ano, TipoVeiculo tipoVeiculo)
@@ -36,6 +36,20 @@ namespace Domain.Cadastros.Aggregates
         {
             return new Veiculo(
                 Uuid.NewSequential(),
+                clienteId,
+                new Placa(placa),
+                new Modelo(modelo),
+                new Marca(marca),
+                new Cor(cor),
+                new Ano(ano),
+                new TipoVeiculo(tipoVeiculo)
+            );
+        }
+
+        public static Veiculo Reidratar(Guid id, Guid clienteId, string placa, string modelo, string marca, string cor, int ano, TipoVeiculoEnum tipoVeiculo)
+        {
+            return new Veiculo(
+                id,
                 clienteId,
                 new Placa(placa),
                 new Modelo(modelo),

@@ -26,6 +26,25 @@ namespace Tests.Domain.Cadastros
             servico.Preco.Valor.Should().Be(preco);
         }
 
+        [Fact(DisplayName = "Deve reidratar Serviço com ID específico e dados válidos")]
+        [Trait("Método", "Reidratar")]
+        public void ServicoReidratar_Deve_ReidratarServico_Quando_DadosValidos()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var nome = "Troca de óleo";
+            var preco = 150.00M;
+
+            // Act
+            var servico = Servico.Reidratar(id, nome, preco);
+
+            // Assert
+            servico.Should().NotBeNull();
+            servico.Id.Should().Be(id);
+            servico.Nome.Valor.Should().Be(nome);
+            servico.Preco.Valor.Should().Be(preco);
+        }
+
         [Fact(DisplayName = "Deve atualizar serviço com dados válidos")]
         [Trait("Método", "Atualizar")]
         public void ServicoAtualizar_Deve_AtualizarServico_Quando_DadosValidos()

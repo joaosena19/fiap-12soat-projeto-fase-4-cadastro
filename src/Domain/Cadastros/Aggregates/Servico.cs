@@ -26,6 +26,11 @@ namespace Domain.Cadastros.Aggregates
             return new Servico(Uuid.NewSequential(), new NomeServico(nome), new PrecoServico(preco));
         }
 
+        public static Servico Reidratar(Guid id, string nome, decimal preco)
+        {
+            return new Servico(id, new NomeServico(nome), new PrecoServico(preco));
+        }
+
         public void Atualizar(string nome, decimal preco)
         {
             Nome = new NomeServico(nome);

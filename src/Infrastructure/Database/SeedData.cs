@@ -4,6 +4,7 @@ using Domain.Identidade.Aggregates;
 using Infrastructure.Authentication.PasswordHashing;
 using Microsoft.Extensions.Options;
 using Shared.Options;
+using Shared.Seed;
 
 namespace Infrastructure.Database
 {
@@ -47,9 +48,9 @@ namespace Infrastructure.Database
             // 2. Cria dados de teste para veículos
             var veiculosDeTeste = new List<Veiculo>
             {
-                Veiculo.Criar(clientes[0].Id, "ABC-1234", "Civic", "Honda", "Prata", 2020, TipoVeiculoEnum.Carro),
-                Veiculo.Criar(clientes[1].Id, "XYZ-5678", "Corolla", "Toyota", "Branco", 2019, TipoVeiculoEnum.Carro),
-                Veiculo.Criar(clientes[2].Id, "DEF-9012", "CB 600F", "Honda", "Azul", 2021, TipoVeiculoEnum.Moto),
+                Veiculo.Reidratar(SeedIds.Veiculos.Abc1234, clientes[0].Id, "ABC-1234", "Civic", "Honda", "Prata", 2020, TipoVeiculoEnum.Carro),
+                Veiculo.Reidratar(SeedIds.Veiculos.Xyz5678, clientes[1].Id, "XYZ-5678", "Corolla", "Toyota", "Branco", 2019, TipoVeiculoEnum.Carro),
+                Veiculo.Reidratar(SeedIds.Veiculos.Def9012, clientes[2].Id, "DEF-9012", "CB 600F", "Honda", "Azul", 2021, TipoVeiculoEnum.Moto),
                 Veiculo.Criar(clientes[3].Id, "GHI-3456", "Onix", "Chevrolet", "Vermelho", 2022, TipoVeiculoEnum.Carro),
                 Veiculo.Criar(clientes[4].Id, "JKL-7890", "YZF-R3", "Yamaha", "Preto", 2020, TipoVeiculoEnum.Moto)
             };
@@ -68,9 +69,9 @@ namespace Infrastructure.Database
             // 2. Cria dados de teste para serviços
             var servicosDeTeste = new List<Servico>
             {
-                Servico.Criar("Troca de Óleo", 80.00m),
-                Servico.Criar("Alinhamento e Balanceamento", 120.00m),
-                Servico.Criar("Revisão Completa", 350.00m),
+                Servico.Reidratar(SeedIds.Servicos.TrocaDeOleo, "Troca de Óleo", 80.00m),
+                Servico.Reidratar(SeedIds.Servicos.AlinhamentoBalanceamento, "Alinhamento e Balanceamento", 120.00m),
+                Servico.Reidratar(SeedIds.Servicos.RevisaoCompleta, "Revisão Completa", 350.00m),
                 Servico.Criar("Troca de Pastilhas de Freio", 180.00m),
                 Servico.Criar("Troca de Filtro de Ar", 45.00m),
                 Servico.Criar("Diagnóstico Eletrônico", 100.00m),
