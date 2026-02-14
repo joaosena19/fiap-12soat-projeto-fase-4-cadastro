@@ -104,3 +104,8 @@ Thumbs.db
 
 # Atlas/Conductor agent plans
 plans/
+# Copilot instructions
+.github/copilot-instructions.md
+
+# Agents instructions
+AGENTS.md

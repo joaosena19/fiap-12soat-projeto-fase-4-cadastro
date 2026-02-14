@@ -131,6 +131,37 @@ namespace Tests.Other.DataSeed
             context.Veiculos.Should().Contain(v => v.Placa.Valor == "XXX1111");
         }
 
+        [Fact(DisplayName = "Deve criar veículos com IDs determinísticos quando usar reidratação")]
+        [Trait("Método", "SeedVeiculos")]
+        public void SeedVeiculos_DeveCriarVeiculosComIdsDeterministicos_QuandoUsarReidratacao()
+        {
+            // Arrange
+            using var context = _fixture.CriarDbContext();
+            SeedData.SeedClientes(context);
+
+            // Act
+            SeedData.SeedVeiculos(context);
+
+            // Assert
+            var veiculoAbc1234 = context.Veiculos.Find(Shared.Seed.SeedIds.Veiculos.Abc1234);
+            veiculoAbc1234.Should().NotBeNull();
+            veiculoAbc1234!.Id.Should().Be(Shared.Seed.SeedIds.Veiculos.Abc1234);
+            veiculoAbc1234.Placa.Valor.Should().Be("ABC1234");
+            veiculoAbc1234.Modelo.Valor.Should().Be("Civic");
+
+            var veiculoXyz5678 = context.Veiculos.Find(Shared.Seed.SeedIds.Veiculos.Xyz5678);
+            veiculoXyz5678.Should().NotBeNull();
+            veiculoXyz5678!.Id.Should().Be(Shared.Seed.SeedIds.Veiculos.Xyz5678);
+            veiculoXyz5678.Placa.Valor.Should().Be("XYZ5678");
+            veiculoXyz5678.Modelo.Valor.Should().Be("Corolla");
+
+            var veiculoDef9012 = context.Veiculos.Find(Shared.Seed.SeedIds.Veiculos.Def9012);
+            veiculoDef9012.Should().NotBeNull();
+            veiculoDef9012!.Id.Should().Be(Shared.Seed.SeedIds.Veiculos.Def9012);
+            veiculoDef9012.Placa.Valor.Should().Be("DEF9012");
+            veiculoDef9012.Modelo.Valor.Should().Be("CB 600F");
+        }
+
         #endregion
 
         #region SeedServicos Tests
@@ -181,6 +212,36 @@ namespace Tests.Other.DataSeed
             var quantidadeFinal = context.Servicos.Count();
             quantidadeFinal.Should().Be(quantidadeInicial);
             context.Servicos.Should().Contain(s => s.Nome.Valor == "Serviço Existente");
+        }
+
+        [Fact(DisplayName = "Deve criar serviços com IDs determinísticos quando usar reidratação")]
+        [Trait("Método", "SeedServicos")]
+        public void SeedServicos_DeveCriarServicosComIdsDeterministicos_QuandoUsarReidratacao()
+        {
+            // Arrange
+            using var context = _fixture.CriarDbContext();
+
+            // Act
+            SeedData.SeedServicos(context);
+
+            // Assert
+            var servicoTrocaOleo = context.Servicos.Find(Shared.Seed.SeedIds.Servicos.TrocaDeOleo);
+            servicoTrocaOleo.Should().NotBeNull();
+            servicoTrocaOleo!.Id.Should().Be(Shared.Seed.SeedIds.Servicos.TrocaDeOleo);
+            servicoTrocaOleo.Nome.Valor.Should().Be("Troca de Óleo");
+            servicoTrocaOleo.Preco.Valor.Should().Be(80.00m);
+
+            var servicoAlinhamento = context.Servicos.Find(Shared.Seed.SeedIds.Servicos.AlinhamentoBalanceamento);
+            servicoAlinhamento.Should().NotBeNull();
+            servicoAlinhamento!.Id.Should().Be(Shared.Seed.SeedIds.Servicos.AlinhamentoBalanceamento);
+            servicoAlinhamento.Nome.Valor.Should().Be("Alinhamento e Balanceamento");
+            servicoAlinhamento.Preco.Valor.Should().Be(120.00m);
+
+            var servicoRevisao = context.Servicos.Find(Shared.Seed.SeedIds.Servicos.RevisaoCompleta);
+            servicoRevisao.Should().NotBeNull();
+            servicoRevisao!.Id.Should().Be(Shared.Seed.SeedIds.Servicos.RevisaoCompleta);
+            servicoRevisao.Nome.Valor.Should().Be("Revisão Completa");
+            servicoRevisao.Preco.Valor.Should().Be(350.00m);
         }
 
         #endregion
