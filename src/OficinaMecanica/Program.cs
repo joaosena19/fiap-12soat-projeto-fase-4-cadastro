@@ -42,7 +42,7 @@ builder.Services.AddSwaggerDocumentation();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddMonitoring();
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks(builder.Configuration);
 
 
 var app = builder.Build();
