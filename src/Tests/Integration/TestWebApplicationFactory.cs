@@ -21,7 +21,7 @@ namespace Tests.Integration
             // Gera uma database única para cada classe de teste, útil para múltiplos testes não interferirem no mesmo banco e corromperem outros testes.
             var stackTrace = new StackTrace();
             var callingFrame = stackTrace.GetFrames()
-                ?.FirstOrDefault(f => f.GetMethod()?.DeclaringType?.Name?.EndsWith("Tests") == true);
+                ?.FirstOrDefault(f => f.GetMethod()?.DeclaringType?.Name?.EndsWith("Tests", StringComparison.Ordinal) == true);
             
             var testClassName = callingFrame?.GetMethod()?.DeclaringType?.Name ?? "Unknown";
             _databaseName = $"TestDb_{testClassName}_{Guid.NewGuid():N}";
