@@ -37,7 +37,7 @@ namespace Tests.Integration.Identidade
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/identidade/usuarios", dto);
+            var response = await _client.PostAsJsonAsync("/api/usuarios", dto);
             var usuarioEntity = await context.Usuarios.Include(u => u.Roles).FirstOrDefaultAsync(u => u.DocumentoIdentificadorUsuario.Valor == cpf);
 
             // Assert
@@ -63,11 +63,11 @@ namespace Tests.Integration.Identidade
             };
 
             // Create user first
-            var createResponse = await _client.PostAsJsonAsync("/api/identidade/usuarios", dto);
+            var createResponse = await _client.PostAsJsonAsync("/api/usuarios", dto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             // Act - Try to create again
-            var response = await _client.PostAsJsonAsync("/api/identidade/usuarios", dto);
+            var response = await _client.PostAsJsonAsync("/api/usuarios", dto);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -87,7 +87,7 @@ namespace Tests.Integration.Identidade
             };
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/identidade/usuarios", dto);
+            var response = await _client.PostAsJsonAsync("/api/usuarios", dto);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -130,9 +130,9 @@ namespace Tests.Integration.Identidade
             var rolesIniciais = await context.Roles.CountAsync();
 
             // Act - Criar os três usuários
-            var response1 = await _client.PostAsJsonAsync("/api/identidade/usuarios", usuario1);
-            var response2 = await _client.PostAsJsonAsync("/api/identidade/usuarios", usuario2);
-            var response3 = await _client.PostAsJsonAsync("/api/identidade/usuarios", usuario3);
+            var response1 = await _client.PostAsJsonAsync("/api/usuarios", usuario1);
+            var response2 = await _client.PostAsJsonAsync("/api/usuarios", usuario2);
+            var response3 = await _client.PostAsJsonAsync("/api/usuarios", usuario3);
 
             // Assert - Todos devem ter sido criados com sucesso
             response1.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -185,7 +185,7 @@ namespace Tests.Integration.Identidade
             };
 
             // Act - Cliente tenta criar usuário
-            var response = await clienteAuthenticatedClient.PostAsJsonAsync("/api/identidade/usuarios", dto);
+            var response = await clienteAuthenticatedClient.PostAsJsonAsync("/api/usuarios", dto);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);

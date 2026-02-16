@@ -20,26 +20,26 @@ namespace Tests.Other.Authentication
 
         [Theory]
         // ClienteController endpoints
-        [InlineData("GET", "/api/cadastros/clientes")]
-        [InlineData("GET", "/api/cadastros/clientes/00000000-0000-0000-0000-000000000000")]
-        [InlineData("GET", "/api/cadastros/clientes/documento/12345678901")]
-        [InlineData("POST", "/api/cadastros/clientes")]
-        [InlineData("PUT", "/api/cadastros/clientes/00000000-0000-0000-0000-000000000000")]
+        [InlineData("GET", "/api/clientes")]
+        [InlineData("GET", "/api/clientes/00000000-0000-0000-0000-000000000000")]
+        [InlineData("GET", "/api/clientes/documento/12345678901")]
+        [InlineData("POST", "/api/clientes")]
+        [InlineData("PUT", "/api/clientes/00000000-0000-0000-0000-000000000000")]
         // ServicoController endpoints
-        [InlineData("GET", "/api/cadastros/servicos")]
-        [InlineData("GET", "/api/cadastros/servicos/00000000-0000-0000-0000-000000000000")]
-        [InlineData("POST", "/api/cadastros/servicos")]
-        [InlineData("PUT", "/api/cadastros/servicos/00000000-0000-0000-0000-000000000000")]
+        [InlineData("GET", "/api/servicos")]
+        [InlineData("GET", "/api/servicos/00000000-0000-0000-0000-000000000000")]
+        [InlineData("POST", "/api/servicos")]
+        [InlineData("PUT", "/api/servicos/00000000-0000-0000-0000-000000000000")]
         // VeiculoController endpoints
-        [InlineData("GET", "/api/cadastros/veiculos")]
-        [InlineData("GET", "/api/cadastros/veiculos/00000000-0000-0000-0000-000000000000")]
-        [InlineData("GET", "/api/cadastros/veiculos/placa/ABC1234")]
-        [InlineData("GET", "/api/cadastros/veiculos/cliente/00000000-0000-0000-0000-000000000000")]
-        [InlineData("POST", "/api/cadastros/veiculos")]
-        [InlineData("PUT", "/api/cadastros/veiculos/00000000-0000-0000-0000-000000000000")]
+        [InlineData("GET", "/api/veiculos")]
+        [InlineData("GET", "/api/veiculos/00000000-0000-0000-0000-000000000000")]
+        [InlineData("GET", "/api/veiculos/placa/ABC1234")]
+        [InlineData("GET", "/api/veiculos/cliente/00000000-0000-0000-0000-000000000000")]
+        [InlineData("POST", "/api/veiculos")]
+        [InlineData("PUT", "/api/veiculos/00000000-0000-0000-0000-000000000000")]
         // UsuarioController endpoints
-        [InlineData("GET", "/api/identidade/usuarios/documento/12345678901")]
-        [InlineData("POST", "/api/identidade/usuarios")]
+        [InlineData("GET", "/api/usuarios/documento/12345678901")]
+        [InlineData("POST", "/api/usuarios")]
         public async Task Endpoints_SemAutenticacao_DevemRetornarUnauthorized(string method, string url)
         {
             // Arrange

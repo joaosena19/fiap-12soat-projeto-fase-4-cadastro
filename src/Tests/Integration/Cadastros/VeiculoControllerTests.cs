@@ -32,7 +32,7 @@ namespace Tests.Integration.Cadastros
             // Create a client first
             var cpfValido = DocumentoHelper.GerarCpfValido();
             var clienteDto = new { Nome = "Maria Silva", DocumentoIdentificador = cpfValido };
-            var clienteResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", clienteDto);
+            var clienteResponse = await _client.PostAsJsonAsync("/api/clientes", clienteDto);
             clienteResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == cpfValido);
@@ -50,7 +50,7 @@ namespace Tests.Integration.Cadastros
             };
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/cadastros/veiculos", dto);
+            var response = await _client.PostAsJsonAsync("/api/veiculos", dto);
             var veiculoEntity = await context.Veiculos.FirstOrDefaultAsync(v => v.Placa.Valor == "ABC4567");
 
             // Assert
@@ -76,7 +76,7 @@ namespace Tests.Integration.Cadastros
             // Create a client first
             var cpfValido = DocumentoHelper.GerarCpfValido();
             var clienteDto = new { Nome = "Maria Silva", DocumentoIdentificador = cpfValido };
-            var clienteResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", clienteDto);
+            var clienteResponse = await _client.PostAsJsonAsync("/api/clientes", clienteDto);
             clienteResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == cpfValido);
@@ -102,14 +102,14 @@ namespace Tests.Integration.Cadastros
             };
 
             // Create vehicle first
-            var createResponse = await _client.PostAsJsonAsync("/api/cadastros/veiculos", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/veiculos", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var veiculoCriado = await context.Veiculos.FirstOrDefaultAsync(v => v.Placa.Valor == "XYZ5678");
             veiculoCriado.Should().NotBeNull();
 
             // Act
-            var updateResponse = await _client.PutAsJsonAsync($"/api/cadastros/veiculos/{veiculoCriado!.Id}", atualizarDto);
+            var updateResponse = await _client.PutAsJsonAsync($"/api/veiculos/{veiculoCriado!.Id}", atualizarDto);
             
             // Limpa o tracking do EF Core
             context.ChangeTracker.Clear();
@@ -136,7 +136,7 @@ namespace Tests.Integration.Cadastros
             // Create a client first
             var cpfValido = DocumentoHelper.GerarCpfValido();
             var clienteDto = new { Nome = "João Proprietário", DocumentoIdentificador = cpfValido };
-            var clienteResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", clienteDto);
+            var clienteResponse = await _client.PostAsJsonAsync("/api/clientes", clienteDto);
             clienteResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == cpfValido);
@@ -165,14 +165,14 @@ namespace Tests.Integration.Cadastros
             };
 
             // Create vehicle with admin client first
-            var createResponse = await _client.PostAsJsonAsync("/api/cadastros/veiculos", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/veiculos", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var veiculoCriado = await context.Veiculos.FirstOrDefaultAsync(v => v.Placa.Valor == "OWN5678");
             veiculoCriado.Should().NotBeNull();
 
             // Act - Update with owner client
-            var updateResponse = await authenticatedClient.PutAsJsonAsync($"/api/cadastros/veiculos/{veiculoCriado!.Id}", atualizarDto);
+            var updateResponse = await authenticatedClient.PutAsJsonAsync($"/api/veiculos/{veiculoCriado!.Id}", atualizarDto);
             
             // Limpa o tracking do EF Core
             context.ChangeTracker.Clear();
@@ -201,8 +201,8 @@ namespace Tests.Integration.Cadastros
             var cliente1Dto = new { Nome = "Cliente Proprietário", DocumentoIdentificador = cpf1 };
             var cliente2Dto = new { Nome = "Cliente Outro", DocumentoIdentificador = cpf2 };
             
-            var cliente1Response = await _client.PostAsJsonAsync("/api/cadastros/clientes", cliente1Dto);
-            var cliente2Response = await _client.PostAsJsonAsync("/api/cadastros/clientes", cliente2Dto);
+            var cliente1Response = await _client.PostAsJsonAsync("/api/clientes", cliente1Dto);
+            var cliente2Response = await _client.PostAsJsonAsync("/api/clientes", cliente2Dto);
             
             cliente1Response.StatusCode.Should().Be(HttpStatusCode.Created);
             cliente2Response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -225,7 +225,7 @@ namespace Tests.Integration.Cadastros
                 TipoVeiculo = (int)TipoVeiculoEnum.Carro 
             };
             
-            var createResponse = await _client.PostAsJsonAsync("/api/cadastros/veiculos", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/veiculos", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var veiculoCriado = await context.Veiculos.FirstOrDefaultAsync(v => v.Placa.Valor == "FRB5678");
@@ -244,7 +244,7 @@ namespace Tests.Integration.Cadastros
             };
 
             // Act - Tentar atualizar veículo do cliente1 com autenticação do cliente2
-            var updateResponse = await cliente2AuthenticatedClient.PutAsJsonAsync($"/api/cadastros/veiculos/{veiculoCriado!.Id}", atualizarDto);
+            var updateResponse = await cliente2AuthenticatedClient.PutAsJsonAsync($"/api/veiculos/{veiculoCriado!.Id}", atualizarDto);
 
             // Assert
             updateResponse.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -264,8 +264,8 @@ namespace Tests.Integration.Cadastros
             var cliente1Dto = new { Nome = "Cliente 1", DocumentoIdentificador = "04663818080" };
             var cliente2Dto = new { Nome = "Cliente 2", DocumentoIdentificador = "98552408040" };
             
-            var cliente1Response = await _client.PostAsJsonAsync("/api/cadastros/clientes", cliente1Dto);
-            var cliente2Response = await _client.PostAsJsonAsync("/api/cadastros/clientes", cliente2Dto);
+            var cliente1Response = await _client.PostAsJsonAsync("/api/clientes", cliente1Dto);
+            var cliente2Response = await _client.PostAsJsonAsync("/api/clientes", cliente2Dto);
             
             cliente1Response.StatusCode.Should().Be(HttpStatusCode.Created);
             cliente2Response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -298,11 +298,11 @@ namespace Tests.Integration.Cadastros
             };
 
             // Create test vehicles
-            await _client.PostAsJsonAsync("/api/cadastros/veiculos", veiculo1);
-            await _client.PostAsJsonAsync("/api/cadastros/veiculos", veiculo2);
+            await _client.PostAsJsonAsync("/api/veiculos", veiculo1);
+            await _client.PostAsJsonAsync("/api/veiculos", veiculo2);
 
             // Act
-            var response = await _client.GetAsync("/api/cadastros/veiculos");
+            var response = await _client.GetAsync("/api/veiculos");
             var veiculos = await response.Content.ReadFromJsonAsync<IEnumerable<RetornoVeiculoDto>>();
 
             // Assert
@@ -324,7 +324,7 @@ namespace Tests.Integration.Cadastros
             await context.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/cadastros/veiculos");
+            var response = await _client.GetAsync("/api/veiculos");
             var veiculos = await response.Content.ReadFromJsonAsync<IEnumerable<RetornoVeiculoDto>>();
 
             // Assert
@@ -344,7 +344,7 @@ namespace Tests.Integration.Cadastros
             // Criar cliente
             var cpfValido = DocumentoHelper.GerarCpfValido();
             var clienteDto = new { Nome = "Cliente Teste", DocumentoIdentificador = cpfValido };
-            var clienteResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", clienteDto);
+            var clienteResponse = await _client.PostAsJsonAsync("/api/clientes", clienteDto);
             clienteResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == cpfValido);
@@ -354,7 +354,7 @@ namespace Tests.Integration.Cadastros
             var clienteAuthenticatedClient = _factory.CreateAuthenticatedClient(isAdmin: false, clienteId: clienteCriado!.Id);
 
             // Act - Tentar listar todos os veículos como cliente (não admin)
-            var response = await clienteAuthenticatedClient.GetAsync("/api/cadastros/veiculos");
+            var response = await clienteAuthenticatedClient.GetAsync("/api/veiculos");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -370,7 +370,7 @@ namespace Tests.Integration.Cadastros
 
             // Create a client first
             var clienteDto = new { Nome = "Cliente GetById", DocumentoIdentificador = "23096067074" };
-            var clienteResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", clienteDto);
+            var clienteResponse = await _client.PostAsJsonAsync("/api/clientes", clienteDto);
             clienteResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "23096067074");
@@ -388,14 +388,14 @@ namespace Tests.Integration.Cadastros
             };
 
             // Create vehicle first
-            var createResponse = await _client.PostAsJsonAsync("/api/cadastros/veiculos", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/veiculos", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var veiculoCriado = await context.Veiculos.FirstOrDefaultAsync(v => v.Placa.Valor == "GID0001");
             veiculoCriado.Should().NotBeNull();
 
             // Act
-            var response = await _client.GetAsync($"/api/cadastros/veiculos/{veiculoCriado!.Id}");
+            var response = await _client.GetAsync($"/api/veiculos/{veiculoCriado!.Id}");
             var veiculo = await response.Content.ReadFromJsonAsync<RetornoVeiculoDto>();
 
             // Assert
@@ -415,7 +415,7 @@ namespace Tests.Integration.Cadastros
             var idInexistente = Guid.NewGuid();
 
             // Act
-            var response = await _client.GetAsync($"/api/cadastros/veiculos/{idInexistente}");
+            var response = await _client.GetAsync($"/api/veiculos/{idInexistente}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -432,7 +432,7 @@ namespace Tests.Integration.Cadastros
             // Criar primeiro cliente e autenticar como este cliente para criar veículo
             var clienteDto1 = new { Nome = "Cliente 1", DocumentoIdentificador = DocumentoHelper.GerarCpfValido() };
             var adminClient = _factory.CreateAuthenticatedClient(); // cliente admin
-            var clienteResponse1 = await adminClient.PostAsJsonAsync("/api/cadastros/clientes", clienteDto1);
+            var clienteResponse1 = await adminClient.PostAsJsonAsync("/api/clientes", clienteDto1);
             clienteResponse1.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var cliente1Criado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == clienteDto1.DocumentoIdentificador);
@@ -452,7 +452,7 @@ namespace Tests.Integration.Cadastros
                 TipoVeiculo = (int)TipoVeiculoEnum.Carro 
             };
 
-            var createVeiculoResponse = await cliente1AuthenticatedClient.PostAsJsonAsync("/api/cadastros/veiculos", veiculoDto);
+            var createVeiculoResponse = await cliente1AuthenticatedClient.PostAsJsonAsync("/api/veiculos", veiculoDto);
             createVeiculoResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var veiculoCriado = await context.Veiculos.FirstOrDefaultAsync(v => v.Placa.Valor == "ABC1234");
@@ -460,7 +460,7 @@ namespace Tests.Integration.Cadastros
 
             // Criar segundo cliente e autenticar como este cliente
             var clienteDto2 = new { Nome = "Cliente 2", DocumentoIdentificador = DocumentoHelper.GerarCpfValido() };
-            var clienteResponse2 = await adminClient.PostAsJsonAsync("/api/cadastros/clientes", clienteDto2);
+            var clienteResponse2 = await adminClient.PostAsJsonAsync("/api/clientes", clienteDto2);
             clienteResponse2.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var cliente2Criado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == clienteDto2.DocumentoIdentificador);
@@ -470,7 +470,7 @@ namespace Tests.Integration.Cadastros
             var cliente2AuthenticatedClient = _factory.CreateAuthenticatedClient(isAdmin: false, clienteId: cliente2Criado!.Id);
 
             // Act - tentar acessar veículo do primeiro cliente
-            var response = await cliente2AuthenticatedClient.GetAsync($"/api/cadastros/veiculos/{veiculoCriado!.Id}");
+            var response = await cliente2AuthenticatedClient.GetAsync($"/api/veiculos/{veiculoCriado!.Id}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -486,7 +486,7 @@ namespace Tests.Integration.Cadastros
 
             // Create a client first
             var clienteDto = new { Nome = "Cliente GetByPlaca", DocumentoIdentificador = "01213944090" };
-            var clienteResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", clienteDto);
+            var clienteResponse = await _client.PostAsJsonAsync("/api/clientes", clienteDto);
             clienteResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "01213944090");
@@ -504,14 +504,14 @@ namespace Tests.Integration.Cadastros
             };
 
             // Create vehicle first
-            var createResponse = await _client.PostAsJsonAsync("/api/cadastros/veiculos", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/veiculos", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var veiculoCriado = await context.Veiculos.FirstOrDefaultAsync(v => v.Placa.Valor == "GPL0001");
             veiculoCriado.Should().NotBeNull();
 
             // Act
-            var response = await _client.GetAsync($"/api/cadastros/veiculos/placa/GPL0001");
+            var response = await _client.GetAsync($"/api/veiculos/placa/GPL0001");
             var veiculo = await response.Content.ReadFromJsonAsync<RetornoVeiculoDto>();
 
             // Assert
@@ -531,7 +531,7 @@ namespace Tests.Integration.Cadastros
             var placaInexistente = "XXX9999";
 
             // Act
-            var response = await _client.GetAsync($"/api/cadastros/veiculos/placa/{placaInexistente}");
+            var response = await _client.GetAsync($"/api/veiculos/placa/{placaInexistente}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -548,7 +548,7 @@ namespace Tests.Integration.Cadastros
             // Criar primeiro cliente e autenticar como este cliente para criar veículo
             var clienteDto1 = new { Nome = "Cliente 1 Placa", DocumentoIdentificador = DocumentoHelper.GerarCpfValido() };
             var adminClient = _factory.CreateAuthenticatedClient(); // cliente admin
-            var clienteResponse1 = await adminClient.PostAsJsonAsync("/api/cadastros/clientes", clienteDto1);
+            var clienteResponse1 = await adminClient.PostAsJsonAsync("/api/clientes", clienteDto1);
             clienteResponse1.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var cliente1Criado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == clienteDto1.DocumentoIdentificador);
@@ -568,12 +568,12 @@ namespace Tests.Integration.Cadastros
                 TipoVeiculo = (int)TipoVeiculoEnum.Carro 
             };
 
-            var createVeiculoResponse = await cliente1AuthenticatedClient.PostAsJsonAsync("/api/cadastros/veiculos", veiculoDto);
+            var createVeiculoResponse = await cliente1AuthenticatedClient.PostAsJsonAsync("/api/veiculos", veiculoDto);
             createVeiculoResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             // Criar segundo cliente e autenticar como este cliente
             var clienteDto2 = new { Nome = "Cliente 2 Placa", DocumentoIdentificador = DocumentoHelper.GerarCpfValido() };
-            var clienteResponse2 = await adminClient.PostAsJsonAsync("/api/cadastros/clientes", clienteDto2);
+            var clienteResponse2 = await adminClient.PostAsJsonAsync("/api/clientes", clienteDto2);
             clienteResponse2.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var cliente2Criado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == clienteDto2.DocumentoIdentificador);
@@ -583,7 +583,7 @@ namespace Tests.Integration.Cadastros
             var cliente2AuthenticatedClient = _factory.CreateAuthenticatedClient(isAdmin: false, clienteId: cliente2Criado!.Id);
 
             // Act - tentar acessar veículo do primeiro cliente pela placa
-            var response = await cliente2AuthenticatedClient.GetAsync("/api/cadastros/veiculos/placa/DEF5678");
+            var response = await cliente2AuthenticatedClient.GetAsync("/api/veiculos/placa/DEF5678");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -599,7 +599,7 @@ namespace Tests.Integration.Cadastros
 
             // Criar cliente primeiro
             var clienteDto = new { Nome = "Cliente Teste Placa", DocumentoIdentificador = "23882227028" };
-            var clienteResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", clienteDto);
+            var clienteResponse = await _client.PostAsJsonAsync("/api/clientes", clienteDto);
             clienteResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "23882227028");
@@ -617,7 +617,7 @@ namespace Tests.Integration.Cadastros
             };
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/cadastros/veiculos", dto);
+            var response = await _client.PostAsJsonAsync("/api/veiculos", dto);
             var veiculoEntity = await context.Veiculos.FirstOrDefaultAsync(v => v.Placa.Valor == "ABC1234");
 
             // Assert
@@ -638,8 +638,8 @@ namespace Tests.Integration.Cadastros
             var cliente1Dto = new { Nome = "Cliente 1", DocumentoIdentificador = "27735549067" };
             var cliente2Dto = new { Nome = "Cliente 2", DocumentoIdentificador = "83587959048" };
             
-            var cliente1Response = await _client.PostAsJsonAsync("/api/cadastros/clientes", cliente1Dto);
-            var cliente2Response = await _client.PostAsJsonAsync("/api/cadastros/clientes", cliente2Dto);
+            var cliente1Response = await _client.PostAsJsonAsync("/api/clientes", cliente1Dto);
+            var cliente2Response = await _client.PostAsJsonAsync("/api/clientes", cliente2Dto);
             
             cliente1Response.StatusCode.Should().Be(HttpStatusCode.Created);
             cliente2Response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -659,7 +659,7 @@ namespace Tests.Integration.Cadastros
                 TipoVeiculo = (int)TipoVeiculoEnum.Carro 
             };
 
-            var firstResponse = await _client.PostAsJsonAsync("/api/cadastros/veiculos", veiculo1Dto);
+            var firstResponse = await _client.PostAsJsonAsync("/api/veiculos", veiculo1Dto);
             firstResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             // Tentar criar segundo veículo com versão lowercase da mesma placa
@@ -675,7 +675,7 @@ namespace Tests.Integration.Cadastros
             };
 
             // Act
-            var secondResponse = await _client.PostAsJsonAsync("/api/cadastros/veiculos", veiculo2Dto);
+            var secondResponse = await _client.PostAsJsonAsync("/api/veiculos", veiculo2Dto);
 
             // Assert
             secondResponse.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -695,8 +695,8 @@ namespace Tests.Integration.Cadastros
             var cliente1Dto = new { Nome = "Cliente Proprietário", DocumentoIdentificador = cpf1 };
             var cliente2Dto = new { Nome = "Cliente Outro", DocumentoIdentificador = cpf2 };
             
-            var cliente1Response = await _client.PostAsJsonAsync("/api/cadastros/clientes", cliente1Dto);
-            var cliente2Response = await _client.PostAsJsonAsync("/api/cadastros/clientes", cliente2Dto);
+            var cliente1Response = await _client.PostAsJsonAsync("/api/clientes", cliente1Dto);
+            var cliente2Response = await _client.PostAsJsonAsync("/api/clientes", cliente2Dto);
             
             cliente1Response.StatusCode.Should().Be(HttpStatusCode.Created);
             cliente2Response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -722,7 +722,7 @@ namespace Tests.Integration.Cadastros
             };
 
             // Act - Tentar criar veículo para outro cliente
-            var response = await cliente1AuthenticatedClient.PostAsJsonAsync("/api/cadastros/veiculos", dto);
+            var response = await cliente1AuthenticatedClient.PostAsJsonAsync("/api/veiculos", dto);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -738,7 +738,7 @@ namespace Tests.Integration.Cadastros
 
             // Criar um cliente primeiro
             var clienteDto = new { Nome = "Cliente GetByPlaca Case", DocumentoIdentificador = "45503206053" };
-            var clienteResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", clienteDto);
+            var clienteResponse = await _client.PostAsJsonAsync("/api/clientes", clienteDto);
             clienteResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "45503206053");
@@ -756,11 +756,11 @@ namespace Tests.Integration.Cadastros
             };
 
             // Criar veículo primeiro
-            var createResponse = await _client.PostAsJsonAsync("/api/cadastros/veiculos", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/veiculos", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             // Act - Tentar encontrar com placa em lowercase
-            var response = await _client.GetAsync($"/api/cadastros/veiculos/placa/ghi9012");
+            var response = await _client.GetAsync($"/api/veiculos/placa/ghi9012");
             var veiculo = await response.Content.ReadFromJsonAsync<RetornoVeiculoDto>();
 
             // Assert
@@ -779,7 +779,7 @@ namespace Tests.Integration.Cadastros
 
             // Criar cliente primeiro
             var clienteDto = new { Nome = "Carlos Pereira", DocumentoIdentificador = "50153367059" };
-            var clienteResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", clienteDto);
+            var clienteResponse = await _client.PostAsJsonAsync("/api/clientes", clienteDto);
             clienteResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "50153367059");
@@ -808,11 +808,11 @@ namespace Tests.Integration.Cadastros
                 TipoVeiculo = (int)TipoVeiculoEnum.Carro 
             };
 
-            await _client.PostAsJsonAsync("/api/cadastros/veiculos", veiculo1Dto);
-            await _client.PostAsJsonAsync("/api/cadastros/veiculos", veiculo2Dto);
+            await _client.PostAsJsonAsync("/api/veiculos", veiculo1Dto);
+            await _client.PostAsJsonAsync("/api/veiculos", veiculo2Dto);
 
             // Act
-            var response = await _client.GetAsync($"/api/cadastros/veiculos/cliente/{clienteCriado.Id}");
+            var response = await _client.GetAsync($"/api/veiculos/cliente/{clienteCriado.Id}");
             var veiculos = await response.Content.ReadFromJsonAsync<List<RetornoVeiculoDto>>();
 
             // Assert
@@ -834,14 +834,14 @@ namespace Tests.Integration.Cadastros
 
             // Criar cliente sem veículos
             var clienteDto = new { Nome = "Ana Costa", DocumentoIdentificador = "94192303094" };
-            var clienteResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", clienteDto);
+            var clienteResponse = await _client.PostAsJsonAsync("/api/clientes", clienteDto);
             clienteResponse.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "94192303094");
             clienteCriado.Should().NotBeNull();
 
             // Act
-            var response = await _client.GetAsync($"/api/cadastros/veiculos/cliente/{clienteCriado!.Id}");
+            var response = await _client.GetAsync($"/api/veiculos/cliente/{clienteCriado!.Id}");
             var veiculos = await response.Content.ReadFromJsonAsync<List<RetornoVeiculoDto>>();
 
             // Assert
@@ -858,7 +858,7 @@ namespace Tests.Integration.Cadastros
             var clienteIdInexistente = Guid.NewGuid();
 
             // Act
-            var response = await _client.GetAsync($"/api/cadastros/veiculos/cliente/{clienteIdInexistente}");
+            var response = await _client.GetAsync($"/api/veiculos/cliente/{clienteIdInexistente}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.UnprocessableContent);
@@ -875,7 +875,7 @@ namespace Tests.Integration.Cadastros
             // Criar primeiro cliente
             var clienteDto1 = new { Nome = "Cliente 1 Lista", DocumentoIdentificador = DocumentoHelper.GerarCpfValido() };
             var adminClient = _factory.CreateAuthenticatedClient(); // cliente admin
-            var clienteResponse1 = await adminClient.PostAsJsonAsync("/api/cadastros/clientes", clienteDto1);
+            var clienteResponse1 = await adminClient.PostAsJsonAsync("/api/clientes", clienteDto1);
             clienteResponse1.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var cliente1Criado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == clienteDto1.DocumentoIdentificador);
@@ -883,7 +883,7 @@ namespace Tests.Integration.Cadastros
 
             // Criar segundo cliente e autenticar como este cliente
             var clienteDto2 = new { Nome = "Cliente 2 Lista", DocumentoIdentificador = DocumentoHelper.GerarCpfValido() };
-            var clienteResponse2 = await adminClient.PostAsJsonAsync("/api/cadastros/clientes", clienteDto2);
+            var clienteResponse2 = await adminClient.PostAsJsonAsync("/api/clientes", clienteDto2);
             clienteResponse2.StatusCode.Should().Be(HttpStatusCode.Created);
             
             var cliente2Criado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == clienteDto2.DocumentoIdentificador);
@@ -893,7 +893,7 @@ namespace Tests.Integration.Cadastros
             var cliente2AuthenticatedClient = _factory.CreateAuthenticatedClient(isAdmin: false, clienteId: cliente2Criado!.Id);
 
             // Act - tentar acessar veículos do primeiro cliente
-            var response = await cliente2AuthenticatedClient.GetAsync($"/api/cadastros/veiculos/cliente/{cliente1Criado!.Id}");
+            var response = await cliente2AuthenticatedClient.GetAsync($"/api/veiculos/cliente/{cliente1Criado!.Id}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
