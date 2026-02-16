@@ -13,7 +13,7 @@ namespace API.Endpoints.Cadastro
     /// <summary>
     /// Controller para gerenciamento de cadastro de serviços
     /// </summary>
-    [Route("api/cadastros/servicos")]
+    [Route("api/servicos")]
     [ApiController]
     [Produces("application/json")]
     public class ServicoController : BaseController
