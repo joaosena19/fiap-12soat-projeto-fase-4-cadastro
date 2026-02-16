@@ -206,6 +206,17 @@ jobs:
             --from-literal=Jwt__Issuer=${{ secrets.JWT_ISSUER }} \
             --from-literal=Jwt__Audience=${{ secrets.JWT_AUDIENCE }} \
             --from-literal=ApiCredentials__ClientId=${{ secrets.API_CLIENT_ID }} \
+            --from-literal=NEW_RELIC_APP_NAME=CadastroService \
+            --from-literal=NEW_RELIC_APPLICATION_LOGGING_ENABLED=true \
+            --from-literal=NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED=true \
+            --from-literal=NEW_RELIC_APPLICATION_LOGGING_CONTEXT_DATA_ENABLED=true \
+            --from-literal=NEW_RELIC_APPLICATION_LOGGING_METRICS_ENABLED=true \
+            --from-literal=NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true \
+            --from-literal=NEW_RELIC_LOG_LEVEL=info \
+            --from-literal=NEW_RELIC_HOME=/app/newrelic \
+            --from-literal=CORECLR_ENABLE_PROFILING=1 \
+            --from-literal=CORECLR_PROFILER="{36032161-FFC0-4B61-B559-F6C5D41BAE5A}" \
+            --from-literal=CORECLR_PROFILER_PATH=/app/newrelic/libNewRelicProfiler.so \
             --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Atualizar tag da imagem no manifesto k8s
@@ -218,8 +229,6 @@ jobs:
 
       - name: Aplicar manifestos K8s
         run: |
-          kubectl apply -f k8s/${{ env.SERVICE_NAME }}-config.yaml
-          kubectl apply -f k8s/${{ env.SERVICE_NAME }}-secret.yaml
           kubectl apply -f k8s/${{ env.SERVICE_NAME }}-deployment.yaml
           kubectl apply -f k8s/${{ env.SERVICE_NAME }}-service.yaml
           kubectl apply -f k8s/${{ env.SERVICE_NAME }}-hpa.yaml
