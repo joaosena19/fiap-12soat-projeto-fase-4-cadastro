@@ -17,7 +17,7 @@ namespace API.Endpoints.Identidade
     /// <summary>
     /// Controller para gerenciamento de usuários
     /// </summary>
-    [Route("api/identidade/usuarios")]
+    [Route("api/usuarios")]
     [ApiController]
     [Produces("application/json")]
     public class UsuarioController : BaseController

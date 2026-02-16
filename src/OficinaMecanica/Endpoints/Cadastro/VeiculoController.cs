@@ -11,7 +11,7 @@ namespace API.Endpoints.Cadastro
     /// <summary>
     /// Controller para gerenciamento de cadastro de veículos
     /// </summary>
-    [Route("api/cadastros/veiculos")]
+    [Route("api/veiculos")]
     [ApiController]
     [Produces("application/json")]
     public class VeiculoController : BaseController
