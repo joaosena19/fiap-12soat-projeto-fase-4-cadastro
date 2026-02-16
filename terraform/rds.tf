@@ -1,7 +1,7 @@
-# Security Group para o RDS PostgreSQL do serviço de Cadastros
+# Security Group para o RDS PostgreSQL do servico de Cadastros
 resource "aws_security_group" "cadastro_db_sg" {
   name        = "${var.db_identifier}-sg"
-  description = "Security group para RDS PostgreSQL Instance do serviço de Cadastros"
+  description = "Security group para RDS PostgreSQL Instance do servico de Cadastros"
   vpc_id      = data.terraform_remote_state.infra.outputs.vpc_principal_id
 
   ingress {
@@ -33,7 +33,7 @@ resource "aws_security_group" "cadastro_db_sg" {
   }
 }
 
-# DB Subnet Group usando as subnets públicas da infraestrutura
+# DB Subnet Group usando as subnets publicas da infraestrutura
 resource "aws_db_subnet_group" "cadastro_subnet_group" {
   name       = "${var.db_identifier}-subnet-group"
   subnet_ids = data.terraform_remote_state.infra.outputs.subnet_publica_ids
@@ -43,7 +43,7 @@ resource "aws_db_subnet_group" "cadastro_subnet_group" {
   }
 }
 
-# Instância RDS PostgreSQL dedicada para o microsserviço de Cadastros
+# Instancia RDS PostgreSQL dedicada para o microsservico de Cadastros
 resource "aws_db_instance" "cadastro_postgres" {
   identifier     = var.db_identifier
   engine         = "postgres"
@@ -70,13 +70,13 @@ resource "aws_db_instance" "cadastro_postgres" {
   skip_final_snapshot       = var.skip_final_snapshot
   final_snapshot_identifier = var.skip_final_snapshot ? null : "${var.db_identifier}-final-snapshot"
 
-  # RDS deve ser acessível pelos pods do EKS na mesma VPC
+  # RDS deve ser acessivel pelos pods do EKS na mesma VPC
   publicly_accessible = false
   
   # Enable automated backups
   copy_tags_to_snapshot = true
   
-  # Performance Insights (desabilitado para custo reduzido em ambiente acadêmico)
+  # Performance Insights (desabilitado para custo reduzido em ambiente academico)
   performance_insights_enabled = false
   
   tags = {

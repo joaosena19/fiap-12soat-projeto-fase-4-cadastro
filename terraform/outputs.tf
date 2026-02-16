@@ -1,20 +1,20 @@
 output "db_instance_id" {
-  description = "ID da instância PostgreSQL RDS do Cadastros"
+  description = "ID da instancia PostgreSQL RDS do Cadastros"
   value       = aws_db_instance.cadastro_postgres.id
 }
 
 output "db_instance_endpoint" {
-  description = "Endpoint da instância PostgreSQL RDS do Cadastros"
+  description = "Endpoint da instancia PostgreSQL RDS do Cadastros"
   value       = aws_db_instance.cadastro_postgres.endpoint
 }
 
 output "db_instance_address" {
-  description = "Endereço (host) da instância PostgreSQL RDS do Cadastros"
+  description = "Endereco (host) da instancia PostgreSQL RDS do Cadastros"
   value       = aws_db_instance.cadastro_postgres.address
 }
 
 output "db_instance_port" {
-  description = "Porta da instância PostgreSQL RDS do Cadastros"
+  description = "Porta da instancia PostgreSQL RDS do Cadastros"
   value       = aws_db_instance.cadastro_postgres.port
 }
 
