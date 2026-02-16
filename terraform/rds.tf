@@ -13,7 +13,7 @@ resource "aws_security_group" "cadastro_db_sg" {
   }
 
   ingress {
-    description = "Acesso PostgreSQL das subnets públicas (pods EKS)"
+    description = "Acesso PostgreSQL das subnets publicas (pods EKS)"
     from_port   = var.db_port
     to_port     = var.db_port
     protocol    = "tcp"
