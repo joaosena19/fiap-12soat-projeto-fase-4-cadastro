@@ -29,7 +29,7 @@ namespace Tests.Integration.Cadastros
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/cadastros/servicos", dto);
+            var response = await _client.PostAsJsonAsync("/api/servicos", dto);
             var servicoEntity = await context.Servicos.FirstOrDefaultAsync(s => s.Nome.Valor == "Troca de óleo");
 
             // Assert
@@ -52,14 +52,14 @@ namespace Tests.Integration.Cadastros
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Create service first
-            var createResponse = await _client.PostAsJsonAsync("/api/cadastros/servicos", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/servicos", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var servicoCriado = await context.Servicos.FirstOrDefaultAsync(s => s.Nome.Valor == "Alinhamento");
             servicoCriado.Should().NotBeNull();
 
             // Act
-            var updateResponse = await _client.PutAsJsonAsync($"/api/cadastros/servicos/{servicoCriado!.Id}", atualizarDto);
+            var updateResponse = await _client.PutAsJsonAsync($"/api/servicos/{servicoCriado!.Id}", atualizarDto);
             
             // Limpa o tracking do EF Core
             context.ChangeTracker.Clear();
@@ -81,11 +81,11 @@ namespace Tests.Integration.Cadastros
             var servico2 = new { Nome = "Troca de pneus", Preco = 250.00M };
 
             // Create test services
-            await _client.PostAsJsonAsync("/api/cadastros/servicos", servico1);
-            await _client.PostAsJsonAsync("/api/cadastros/servicos", servico2);
+            await _client.PostAsJsonAsync("/api/servicos", servico1);
+            await _client.PostAsJsonAsync("/api/servicos", servico2);
 
             // Act
-            var response = await _client.GetAsync("/api/cadastros/servicos");
+            var response = await _client.GetAsync("/api/servicos");
             var servicos = await response.Content.ReadFromJsonAsync<IEnumerable<RetornoServicoDto>>();
 
             // Assert
@@ -107,7 +107,7 @@ namespace Tests.Integration.Cadastros
             await context.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/cadastros/servicos");
+            var response = await _client.GetAsync("/api/servicos");
             var servicos = await response.Content.ReadFromJsonAsync<IEnumerable<RetornoServicoDto>>();
 
             // Assert
@@ -127,14 +127,14 @@ namespace Tests.Integration.Cadastros
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Create service first
-            var createResponse = await _client.PostAsJsonAsync("/api/cadastros/servicos", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/servicos", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var servicoCriado = await context.Servicos.FirstOrDefaultAsync(s => s.Nome.Valor == "Diagnóstico eletrônico");
             servicoCriado.Should().NotBeNull();
 
             // Act
-            var response = await _client.GetAsync($"/api/cadastros/servicos/{servicoCriado!.Id}");
+            var response = await _client.GetAsync($"/api/servicos/{servicoCriado!.Id}");
             var servico = await response.Content.ReadFromJsonAsync<RetornoServicoDto>();
 
             // Assert
@@ -154,7 +154,7 @@ namespace Tests.Integration.Cadastros
             var clienteAuthenticatedClient = _factory.CreateAuthenticatedClient(isAdmin: false, clienteId: clienteId);
 
             // Act - Cliente tenta listar serviços
-            var response = await clienteAuthenticatedClient.GetAsync("/api/cadastros/servicos");
+            var response = await clienteAuthenticatedClient.GetAsync("/api/servicos");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -170,7 +170,7 @@ namespace Tests.Integration.Cadastros
             var servicoId = Guid.NewGuid();
 
             // Act - Cliente tenta buscar serviço por ID
-            var response = await clienteAuthenticatedClient.GetAsync($"/api/cadastros/servicos/{servicoId}");
+            var response = await clienteAuthenticatedClient.GetAsync($"/api/servicos/{servicoId}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -186,7 +186,7 @@ namespace Tests.Integration.Cadastros
             var dto = new { Nome = "Serviço não autorizado", Preco = 100.00M };
 
             // Act - Cliente tenta criar serviço
-            var response = await clienteAuthenticatedClient.PostAsJsonAsync("/api/cadastros/servicos", dto);
+            var response = await clienteAuthenticatedClient.PostAsJsonAsync("/api/servicos", dto);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -203,7 +203,7 @@ namespace Tests.Integration.Cadastros
             var dto = new { Nome = "Serviço atualizado", Preco = 200.00M };
 
             // Act - Cliente tenta atualizar serviço
-            var response = await clienteAuthenticatedClient.PutAsJsonAsync($"/api/cadastros/servicos/{servicoId}", dto);
+            var response = await clienteAuthenticatedClient.PutAsJsonAsync($"/api/servicos/{servicoId}", dto);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);

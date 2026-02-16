@@ -32,7 +32,7 @@ namespace Tests.Integration.Cadastros
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/cadastros/clientes", dto);
+            var response = await _client.PostAsJsonAsync("/api/clientes", dto);
             var clientEntity = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "49622601030");
 
             // Assert
@@ -55,14 +55,14 @@ namespace Tests.Integration.Cadastros
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Create client first
-            var createResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/clientes", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "42103574052");
             clienteCriado.Should().NotBeNull();
 
             // Act
-            var updateResponse = await _client.PutAsJsonAsync($"/api/cadastros/clientes/{clienteCriado!.Id}", atualizarDto);
+            var updateResponse = await _client.PutAsJsonAsync($"/api/clientes/{clienteCriado!.Id}", atualizarDto);
 
             // Limpa o tracking do EF Core
             context.ChangeTracker.Clear();
@@ -86,7 +86,7 @@ namespace Tests.Integration.Cadastros
             // Criar primeiro cliente usando admin
             var criarDto1 = new { Nome = "Cliente 1", DocumentoIdentificador = DocumentoHelper.GerarCpfValido() };
             var adminClient = _factory.CreateAuthenticatedClient(); // cliente admin
-            var createResponse1 = await adminClient.PostAsJsonAsync("/api/cadastros/clientes", criarDto1);
+            var createResponse1 = await adminClient.PostAsJsonAsync("/api/clientes", criarDto1);
             createResponse1.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var cliente1Criado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == criarDto1.DocumentoIdentificador);
@@ -94,7 +94,7 @@ namespace Tests.Integration.Cadastros
 
             // Criar segundo cliente usando admin
             var criarDto2 = new { Nome = "Cliente 2", DocumentoIdentificador = DocumentoHelper.GerarCpfValido() };
-            var createResponse2 = await adminClient.PostAsJsonAsync("/api/cadastros/clientes", criarDto2);
+            var createResponse2 = await adminClient.PostAsJsonAsync("/api/clientes", criarDto2);
             createResponse2.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var cliente2Criado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == criarDto2.DocumentoIdentificador);
@@ -106,7 +106,7 @@ namespace Tests.Integration.Cadastros
             var atualizarDto = new { Nome = "Nome Modificado" };
 
             // Act - tentar atualizar dados do primeiro cliente autenticado como segundo cliente
-            var updateResponse = await cliente2AuthenticatedClient.PutAsJsonAsync($"/api/cadastros/clientes/{cliente1Criado!.Id}", atualizarDto);
+            var updateResponse = await cliente2AuthenticatedClient.PutAsJsonAsync($"/api/clientes/{cliente1Criado!.Id}", atualizarDto);
 
             // Assert
             updateResponse.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -121,11 +121,11 @@ namespace Tests.Integration.Cadastros
             var cliente2 = new { Nome = "Maria", DocumentoIdentificador = "84405205060" };
 
             // Create test clients
-            await _client.PostAsJsonAsync("/api/cadastros/clientes", cliente1);
-            await _client.PostAsJsonAsync("/api/cadastros/clientes", cliente2);
+            await _client.PostAsJsonAsync("/api/clientes", cliente1);
+            await _client.PostAsJsonAsync("/api/clientes", cliente2);
 
             // Act
-            var response = await _client.GetAsync("/api/cadastros/clientes");
+            var response = await _client.GetAsync("/api/clientes");
             var clientes = await response.Content.ReadFromJsonAsync<IEnumerable<RetornoClienteDto>>();
 
             // Assert
@@ -147,7 +147,7 @@ namespace Tests.Integration.Cadastros
             await context.SaveChangesAsync();
 
             // Act
-            var response = await _client.GetAsync("/api/cadastros/clientes");
+            var response = await _client.GetAsync("/api/clientes");
             var clientes = await response.Content.ReadFromJsonAsync<IEnumerable<RetornoClienteDto>>();
 
             // Assert
@@ -167,14 +167,14 @@ namespace Tests.Integration.Cadastros
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Create client first
-            var createResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/clientes", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "56227045020");
             clienteCriado.Should().NotBeNull();
 
             // Act
-            var response = await _client.GetAsync($"/api/cadastros/clientes/{clienteCriado!.Id}");
+            var response = await _client.GetAsync($"/api/clientes/{clienteCriado!.Id}");
             var cliente = await response.Content.ReadFromJsonAsync<RetornoClienteDto>();
 
             // Assert
@@ -194,7 +194,7 @@ namespace Tests.Integration.Cadastros
             var idInexistente = Guid.NewGuid();
 
             // Act
-            var response = await _client.GetAsync($"/api/cadastros/clientes/{idInexistente}");
+            var response = await _client.GetAsync($"/api/clientes/{idInexistente}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -211,14 +211,14 @@ namespace Tests.Integration.Cadastros
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Create client first
-            var createResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/clientes", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "34806653063");
             clienteCriado.Should().NotBeNull();
 
             // Act
-            var response = await _client.GetAsync($"/api/cadastros/clientes/documento/34806653063");
+            var response = await _client.GetAsync($"/api/clientes/documento/34806653063");
             var cliente = await response.Content.ReadFromJsonAsync<RetornoClienteDto>();
 
             // Assert
@@ -238,7 +238,7 @@ namespace Tests.Integration.Cadastros
             var cpfInexistente = "99999999999";
 
             // Act
-            var response = await _client.GetAsync($"/api/cadastros/clientes/documento/{cpfInexistente}");
+            var response = await _client.GetAsync($"/api/clientes/documento/{cpfInexistente}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -255,7 +255,7 @@ namespace Tests.Integration.Cadastros
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Create client first
-            var createResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/clientes", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "03984051000193");
@@ -263,7 +263,7 @@ namespace Tests.Integration.Cadastros
 
             // Act - buscar com CNPJ formatado
             var cnpjFormatado = Uri.EscapeDataString("03.984.051/0001-93");
-            var response = await _client.GetAsync($"/api/cadastros/clientes/documento/{cnpjFormatado}");
+            var response = await _client.GetAsync($"/api/clientes/documento/{cnpjFormatado}");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var cliente = await response.Content.ReadFromJsonAsync<RetornoClienteDto>();
 
@@ -287,7 +287,7 @@ namespace Tests.Integration.Cadastros
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Create client first
-            var createResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/clientes", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "38689954000126");
@@ -295,7 +295,7 @@ namespace Tests.Integration.Cadastros
 
             // Act - buscar com CNPJ sem formatação
             var cnpjSemFormatacao = "38689954000126";
-            var response = await _client.GetAsync($"/api/cadastros/clientes/documento/{cnpjSemFormatacao}");
+            var response = await _client.GetAsync($"/api/clientes/documento/{cnpjSemFormatacao}");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var cliente = await response.Content.ReadFromJsonAsync<RetornoClienteDto>();
 
@@ -319,7 +319,7 @@ namespace Tests.Integration.Cadastros
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Create client first
-            var createResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/clientes", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "79705026017");
@@ -327,7 +327,7 @@ namespace Tests.Integration.Cadastros
 
             // Act - buscar com CPF formatado
             var cpfFormatado = "797.050.260-17";
-            var response = await _client.GetAsync($"/api/cadastros/clientes/documento/{cpfFormatado}");
+            var response = await _client.GetAsync($"/api/clientes/documento/{cpfFormatado}");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var cliente = await response.Content.ReadFromJsonAsync<RetornoClienteDto>();
 
@@ -351,7 +351,7 @@ namespace Tests.Integration.Cadastros
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Create client first
-            var createResponse = await _client.PostAsJsonAsync("/api/cadastros/clientes", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/clientes", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var clienteCriado = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "32744285072");
@@ -359,7 +359,7 @@ namespace Tests.Integration.Cadastros
 
             // Act - buscar com CPF sem formatação
             var cpfSemFormatacao = "32744285072";
-            var response = await _client.GetAsync($"/api/cadastros/clientes/documento/{cpfSemFormatacao}");
+            var response = await _client.GetAsync($"/api/clientes/documento/{cpfSemFormatacao}");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var cliente = await response.Content.ReadFromJsonAsync<RetornoClienteDto>();
 
@@ -382,7 +382,7 @@ namespace Tests.Integration.Cadastros
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/cadastros/clientes", dtoComFormatacao);
+            var response = await _client.PostAsJsonAsync("/api/clientes", dtoComFormatacao);
             var clienteEntity = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "92155590000140");
 
             // Assert
@@ -407,7 +407,7 @@ namespace Tests.Integration.Cadastros
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Act
-            var response = await _client.PostAsJsonAsync("/api/cadastros/clientes", dtoComFormatacao);
+            var response = await _client.PostAsJsonAsync("/api/clientes", dtoComFormatacao);
             var clienteEntity = await context.Clientes.FirstOrDefaultAsync(c => c.DocumentoIdentificador.Valor == "56084542000");
 
             // Assert
@@ -437,7 +437,7 @@ namespace Tests.Integration.Cadastros
             var clienteAtualId = Guid.NewGuid(); // ID de um cliente diferente
             var clienteAuthenticatedClient = _factory.CreateAuthenticatedClient(isAdmin: false, clienteId: clienteAtualId);
 
-            var response = await clienteAuthenticatedClient.GetAsync($"/api/cadastros/clientes/documento/{cpfOutroCliente}");
+            var response = await clienteAuthenticatedClient.GetAsync($"/api/clientes/documento/{cpfOutroCliente}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -459,7 +459,7 @@ namespace Tests.Integration.Cadastros
             var clienteAtualId = Guid.NewGuid(); // ID de um cliente diferente
             var clienteAuthenticatedClient = _factory.CreateAuthenticatedClient(isAdmin: false, clienteId: clienteAtualId);
 
-            var response = await clienteAuthenticatedClient.GetAsync($"/api/cadastros/clientes/{clienteEntity.Id}");
+            var response = await clienteAuthenticatedClient.GetAsync($"/api/clientes/{clienteEntity.Id}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -483,7 +483,7 @@ namespace Tests.Integration.Cadastros
 
             // Act - Usuário tenta criar novo cliente com CPF diferente do seu
             var dto = new { Nome = "Outro Cliente", DocumentoIdentificador = cpfDiferente };
-            var response = await usuarioAuthenticatedClient.PostAsJsonAsync("/api/cadastros/clientes", dto);
+            var response = await usuarioAuthenticatedClient.PostAsJsonAsync("/api/clientes", dto);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
@@ -498,7 +498,7 @@ namespace Tests.Integration.Cadastros
             var clienteAuthenticatedClient = _factory.CreateAuthenticatedClient(isAdmin: false, clienteId: clienteId);
 
             // Act - Cliente tenta listar todos os clientes
-            var response = await clienteAuthenticatedClient.GetAsync("/api/cadastros/clientes");
+            var response = await clienteAuthenticatedClient.GetAsync("/api/clientes");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);

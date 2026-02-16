@@ -37,14 +37,14 @@ namespace Tests.Integration.Identidade
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Create user first
-            var createResponse = await _client.PostAsJsonAsync("/api/identidade/usuarios", criarDto);
+            var createResponse = await _client.PostAsJsonAsync("/api/usuarios", criarDto);
             createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
             var usuarioCriado = await context.Usuarios.FirstOrDefaultAsync(u => u.DocumentoIdentificadorUsuario.Valor == cpf);
             usuarioCriado.Should().NotBeNull();
 
             // Act
-            var response = await _client.GetAsync($"/api/identidade/usuarios/documento/{cpf}");
+            var response = await _client.GetAsync($"/api/usuarios/documento/{cpf}");
             var usuario = await response.Content.ReadFromJsonAsync<RetornoUsuarioDto>();
 
             // Assert
@@ -65,7 +65,7 @@ namespace Tests.Integration.Identidade
             var cpfInexistente = DocumentoHelper.GerarCpfValido();
 
             // Act
-            var response = await _client.GetAsync($"/api/identidade/usuarios/documento/{cpfInexistente}");
+            var response = await _client.GetAsync($"/api/usuarios/documento/{cpfInexistente}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -81,7 +81,7 @@ namespace Tests.Integration.Identidade
             var cpfInexistente = DocumentoHelper.GerarCpfValido();
 
             // Act - Cliente tenta buscar usuário por documento
-            var response = await clienteAuthenticatedClient.GetAsync($"/api/identidade/usuarios/documento/{cpfInexistente}");
+            var response = await clienteAuthenticatedClient.GetAsync($"/api/usuarios/documento/{cpfInexistente}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
