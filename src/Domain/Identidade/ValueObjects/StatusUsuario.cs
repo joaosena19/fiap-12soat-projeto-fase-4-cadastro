@@ -15,9 +15,9 @@ namespace Domain.Identidade.ValueObjects
 
         public StatusUsuario(StatusUsuarioEnum statusUsuarioEnum)
         {
-            if (!Enum.IsDefined(typeof(StatusUsuarioEnum), statusUsuarioEnum))
+            if (!Enum.IsDefined(statusUsuarioEnum))
             {
-                var valores = string.Join(", ", Enum.GetNames(typeof(StatusUsuarioEnum)));
+                var valores = string.Join(", ", Enum.GetNames<StatusUsuarioEnum>());
                 throw new DomainException($"Status de usuário '{statusUsuarioEnum}' não é válido. Valores aceitos: {valores}.", ErrorType.InvalidInput);
             }
 

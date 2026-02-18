@@ -15,9 +15,9 @@ namespace Domain.Cadastros.ValueObjects.Veiculo
 
         public TipoVeiculo(TipoVeiculoEnum tipoVeiculoEnum)
         {
-            if (!Enum.IsDefined(typeof(TipoVeiculoEnum), tipoVeiculoEnum))
+            if (!Enum.IsDefined(tipoVeiculoEnum))
             {
-                var valores = string.Join(", ", Enum.GetNames(typeof(TipoVeiculoEnum)));
+                var valores = string.Join(", ", Enum.GetNames<TipoVeiculoEnum>());
                 throw new DomainException($"Tipo de veículo '{tipoVeiculoEnum}' não é válido. Valores aceitos: {valores}.", ErrorType.InvalidInput);
             }
 

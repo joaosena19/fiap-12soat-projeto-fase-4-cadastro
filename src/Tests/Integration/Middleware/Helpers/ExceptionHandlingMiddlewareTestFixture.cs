@@ -22,7 +22,7 @@ public class ExceptionHandlingMiddlewareTestFixture
     /// Cria um DefaultHttpContext configurado para testes de middleware
     /// </summary>
     /// <returns>HttpContext com Response.Body configurado como MemoryStream</returns>
-    public DefaultHttpContext CriarHttpContext()
+    public static DefaultHttpContext CriarHttpContext()
     {
         var context = new DefaultHttpContext();
         context.Response.Body = new MemoryStream();

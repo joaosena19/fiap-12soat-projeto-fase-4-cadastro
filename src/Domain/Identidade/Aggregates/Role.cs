@@ -27,7 +27,7 @@ namespace Domain.Identidade.Aggregates
                 throw new DomainException("Role não pode ser vazio.", ErrorType.InvalidInput);
 
             // Tenta fazer parse do enum (por nome ou por valor numérico)
-            if (!Enum.TryParse<RoleEnum>(roleString, true, out var roleEnum) || !Enum.IsDefined(typeof(RoleEnum), roleEnum))
+            if (!Enum.TryParse<RoleEnum>(roleString, true, out var roleEnum) || !Enum.IsDefined(roleEnum))
                 throw new DomainException($"Role inválido: {roleString}", ErrorType.InvalidInput);
 
             Id = roleEnum;
