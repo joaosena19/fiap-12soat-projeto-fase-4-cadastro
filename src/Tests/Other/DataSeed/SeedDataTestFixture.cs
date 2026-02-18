@@ -10,7 +10,7 @@ namespace Tests.Other.DataSeed
         /// Cria um novo contexto de banco de dados em memória.
         /// Cada contexto usa um banco de dados único (Guid.NewGuid()) para isolamento entre testes.
         /// </summary>
-        public static AppDbContext CriarDbContext()
+        public AppDbContext CriarDbContext()
         {
             var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
