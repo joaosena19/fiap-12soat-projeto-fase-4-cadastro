@@ -23,7 +23,7 @@ namespace Infrastructure.Repositories.Cadastros
 
         public async Task<Veiculo?> ObterPorPlacaAsync(string placa)
         {
-            return await _context.Veiculos.FirstOrDefaultAsync(v => v.Placa.Valor.ToUpper() == placa.ToUpper());
+            return await _context.Veiculos.FirstOrDefaultAsync(v => string.Equals(v.Placa.Valor, placa, StringComparison.OrdinalIgnoreCase));
         }
 
         public async Task<Veiculo?> ObterPorIdAsync(Guid id)
