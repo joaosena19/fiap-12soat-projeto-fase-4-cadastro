@@ -8,6 +8,9 @@ namespace Infrastructure.Database.Configurations
 {
     public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
     {
+        private const string UsuarioIdColumn = "usuario_id";
+        private const string RoleIdColumn = "role_id";
+
         public void Configure(EntityTypeBuilder<Usuario> builder)
         {
             builder.ToTable("usuarios");
@@ -59,21 +62,21 @@ namespace Infrastructure.Database.Configurations
                        "usuarios_roles",
                        j => j.HasOne<Role>()
                             .WithMany()
-                            .HasForeignKey("role_id")
+                            .HasForeignKey(RoleIdColumn)
                             .HasPrincipalKey(nameof(Role.Id)),
                        j => j.HasOne<Usuario>()
                             .WithMany()
-                            .HasForeignKey("usuario_id"),
+                            .HasForeignKey(UsuarioIdColumn),
                        j =>
                        {
                            j.ToTable("usuarios_roles");
-                           j.HasKey("usuario_id", "role_id");
+                           j.HasKey(UsuarioIdColumn, RoleIdColumn);
                            
-                           j.Property("usuario_id")
-                            .HasColumnName("usuario_id");
+                           j.Property(UsuarioIdColumn)
+                            .HasColumnName(UsuarioIdColumn);
                             
-                           j.Property("role_id")
-                            .HasColumnName("role_id");
+                           j.Property(RoleIdColumn)
+                            .HasColumnName(RoleIdColumn);
                        });
         }
     }

@@ -20,11 +20,12 @@ var loggerConfig = new LoggerConfiguration()
 
 var licenseKey = configuration["NEW_RELIC_LICENSE_KEY"];
 var appName = configuration["NEW_RELIC_APP_NAME"] ?? "CadastroService";
+var newRelicEndpoint = configuration["NEW_RELIC_LOG_ENDPOINT_URL"] ?? "https://log-api.newrelic.com/log/v1";
 
 if (!string.IsNullOrWhiteSpace(licenseKey))
 {
     loggerConfig.WriteTo.NewRelicLogs(
-        endpointUrl: "https://log-api.newrelic.com/log/v1",
+        endpointUrl: newRelicEndpoint,
         applicationName: appName,
         licenseKey: licenseKey
     );
@@ -64,5 +65,8 @@ DevelopmentDataSeeder.Seed(app);
 await app.RunAsync();
 
 //Necessário para testes de integração
-public partial class Program { }
+public partial class Program
+{
+    protected Program() { }
+}
 
